@@ -102,5 +102,7 @@ typedef enum CrashReportStatus {
 
 - (void)sendCrashReportToURL:(NSURL *)submissionURL delegate:(id <CrashReportSenderDelegate>)delegate activateFeedback:(BOOL)activateFeedback;
 
+- (BOOL) hasPendingCrashReport;
+- (NSString*) getLastCrashReport;
 
 @end

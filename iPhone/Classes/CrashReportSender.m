@@ -404,6 +404,35 @@
 	[_crashFiles removeAllObjects];	
 }
 
+
+
+- (NSString*) getLastCrashReport{
+	NSError *error;
+	NSString *xml;
+
+
+	for (int i=0; i < [_crashFiles count]; i++){
+	
+		NSString *filename = [_crashesDir stringByAppendingPathComponent:[_crashFiles objectAtIndex:i]];
+		NSData *crashData = [NSData dataWithContentsOfFile:filename];
+		
+		if ([crashData length] > 0){
+			PLCrashReport *report = [[[PLCrashReport alloc] initWithData:crashData error:&error] autorelease];
+			
+			NSString *crashLogString = [self _crashLogStringForReport:report];
+			
+			if ([report.applicationInfo.applicationVersion compare:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] != NSOrderedSame)
+				_crashIdenticalCurrentVersion = NO;
+			xml = crashLogString;
+	
+		}
+	}
+	
+	[self _cleanCrashReports];
+	return xml;
+}
+
+
 - (void)_sendCrashReports
 {
 	NSError *error;
